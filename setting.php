@@ -33,8 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errorMesage = user::$errorMsg;
     }
 }
-
-// Additional HTML or PHP code for form and displaying messages
 ?>
 <!DOCTYPE html>
 <html lang="en">

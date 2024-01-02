@@ -7,11 +7,11 @@ if($_SERVER['REQUEST_METHOD']=='GET'){
 include('connection.php');
 
 $connection = new Connection();
-$connection->selectDatabase('crudPoo6');
+$connection->selectDatabase('Projet');
 
-include('client.php');
+include('user.php');
 
-Client::deleteClient('Clients',$connection->conn,$id);
+User::deleteClient('Users',$connection->conn,$id);
 
 
 

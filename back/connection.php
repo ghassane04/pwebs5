@@ -14,6 +14,9 @@ if (!$this->conn){
 die("Connection failed: " . mysqli_connect_error());
 }
 }
+public function getConn() {
+    return $this->conn; // Assuming $conn is your mysqli connection object
+}
 public function createDatabase($dbName){
     //creating a database with the conn in the class ($this->conn)
     $sql = "CREATE DATABASE $dbName";
@@ -29,7 +32,7 @@ public function selectDatabase($dbName){
 }
 public function createTable($query){
     if (mysqli_query($this->conn, $query)) {
-        echo "Table Clients created successfully";
+        echo "Table created successfully";
         } else {
         echo "Error creating table: " . mysqli_error($this->conn);
         }

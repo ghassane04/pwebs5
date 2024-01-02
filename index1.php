@@ -26,19 +26,19 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-auto me-lg-4">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="index1.php"><i class='bx bx-home'></i>Home</a>
+                                <a class="nav-link click-scroll" href="index1.php">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_2"><i class='bx bx-info-circle' ></i>About us</a>
+                                <a class="nav-link click-scroll" href="#section_2">About us</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_4"><i class='bx bx-book-open'></i>Courses</a>
+                                <a class="nav-link click-scroll" href="#section_4">Courses</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="lessons.php"><i class='bx bx-home'></i>Lessons</a>
+                                <a class="nav-link click-scroll" href="lessons.php">Shop</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_5"><i class='bx bxs-contact'></i>Contact</a>
+                                <a class="nav-link click-scroll" href="#section_5">Contact</a>
                             </li>
                         </ul>
                     </div>
@@ -220,7 +220,7 @@
         <!-- JAVASCRIPT FILES -->
         <script src="js/scripthome.js"></script>
         <script src="js/jquery.min.js"></script>
-        <script src="jquery.sticky.js"></script>
+        <script src="js/jquery.sticky.js"></script>
         
     </body>
 </html>

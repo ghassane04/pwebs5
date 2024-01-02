@@ -1,52 +1,78 @@
 <?php
 
-// Include the connection file
 include('connection.php');
 
-// Create an instance of Connection class
 $connection = new Connection();
-
-// Call the createDatabase method to create database "Projet"
 $connection->createDatabase('Projet');
 
-$query0 = "
+// Users Table
+$query_users = "
+CREATE TABLE Users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(30) NOT NULL,
+    email VARCHAR(50) UNIQUE,
+    password VARCHAR(100),
+    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
+
+// CourseCategories Table
+$query_course_categories = "
+CREATE TABLE CourseCategories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(50)
+)";
+
+// Courses Table
+$query_courses = "
 CREATE TABLE Courses (
     id_C INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     image VARCHAR(100) NOT NULL,
-    categorie VARCHAR(20)
-)
-";
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES CourseCategories(category_id)
+)";
 
-$query = "
-CREATE TABLE Users (
-    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(30) NOT NULL,
-    email VARCHAR(50) UNIQUE,
-    password VARCHAR(80),
-    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    Number_C INT,
-    id_C INT,
-    FOREIGN KEY (id_C) REFERENCES Courses(id_C),
-    FOREIGN KEY (Number_C) REFERENCES Cards(Number_C),
-)
-";
+// Cart Table
+$query_cart = "
+CREATE TABLE Cart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED,
+    total_price DECIMAL(10, 2),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+)";
 
-$query1 = "
+// CartItems Table
+$query_cart_items = "
+CREATE TABLE CartItems (
+    cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT,
+    course_id INT,
+    quantity INT,
+    price DECIMAL(10, 2),
+    FOREIGN KEY (cart_id) REFERENCES Cart(cart_id),
+    FOREIGN KEY (course_id) REFERENCES Courses(id_C)
+)";
+
+// Cards Table
+$query_cards = "
 CREATE TABLE Cards (
-    Number_C INT PRIMARY KEY,
+    card_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED,
+    card_number VARCHAR(16),
+    expiration_date DATE,
     cvv INT,
-    date_exp DATE
-)
-";
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+)";
 
-// Call the selectDatabase method to select the "Projet" database
 $connection->selectDatabase('Projet');
 
-// Call the createTable method to create tables with the provided queries
-$connection->createTable($query0);
-$connection->createTable($query);
-$connection->createTable($query1);
+// Create tables in the correct order
+$connection->createTable($query_users);
+$connection->createTable($query_course_categories);
+$connection->createTable($query_courses);
+$connection->createTable($query_cart);
+$connection->createTable($query_cart_items);
+$connection->createTable($query_cards);
 
 ?>

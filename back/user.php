@@ -38,7 +38,7 @@ self::$successMsg= "New record created successfully";
 public static function  selectAllClients($tableName,$conn){
 
 //select all the client from database, and inset the rows results in an array $data[]
-$sql = "SELECT id,username, email FROM $tableName ";
+$sql = "SELECT id,username, email ,reg_date FROM $tableName ";
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
         // output data of each row
@@ -56,7 +56,7 @@ static function selectClientById($tableName, $conn, $id) {
     $row = null;
 
     // select a client by id, and return the row result
-    $sql = "SELECT id, username, email FROM $tableName WHERE id='$id'";
+    $sql = "SELECT id, username, email, reg_date FROM $tableName WHERE id='$id'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         // output data of each row
@@ -81,11 +81,12 @@ static function deleteClient($tableName,$conn,$id){
 
 if (mysqli_query($conn, $sql)) {
     self::$successMsg= "Record deleted successfully";
-    header("Location:read.php");
+    header("Location:../admin.php");
 } else {
     self::$errorMsg= "Error deleting record: " . mysqli_error($conn);
 }  
     }
+    
 
     public static function updateClientInfo($client, $tableName, $mysqli,$id) {
         // Prepare SQL statement to prevent SQL injection
