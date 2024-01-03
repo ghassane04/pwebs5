@@ -1,47 +1,26 @@
 <?php
-
 session_start();
 if(isset($_SESSION["email"])){
 
-require_once 'back/connection.php';
-require_once 'back/cart.php';
-require_once 'back/cours.php';
-
-$connection = new Connection();
-$db = $connection->conn;
-$connection->selectDatabase('Projet');
-//testing git
-if (isset($_GET['delete'])) {
-    Cart::deleteCartItem($_GET['delete'], $db);
-    header('Location: cartdisplay.php');
-    exit();
-}
-
-// Fetch cart items for the user
-$totalPrice = 0;
-
-// Fetch cart items for the user
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
-
-    // Fetch the total price from Cart table
-    $totalPriceQuery = "SELECT total_price FROM Cart WHERE user_id = ?";
-    $stmtTotal = $db->prepare($totalPriceQuery);
-    $stmtTotal->bind_param("i", $user_id);
-    $stmtTotal->execute();
-    $resultTotal = $stmtTotal->get_result();
-    if ($totalRow = $resultTotal->fetch_assoc()) {
-        $totalPrice = $totalRow['total_price'];
+    require_once 'back/connection.php';
+    require_once 'back/cart.php';
+    require_once 'back/cours.php';
+    
+    $connection = new Connection();
+    $db = $connection->conn;
+    $connection->selectDatabase('Projet');
+    $userId = $_SESSION['user_id'];
+    // Create an instance of Cart class
+    $cart = new Cart($db);
+    if (isset($_GET['delete'])) {
+        $cartItemId = $_GET['delete'];
+        $cart->deleteCartItem($cartItemId, $userId);
+        header('Location: cartdisplay.php');
+        exit();
     }
-
-    $cart_items_query = "SELECT CartItems.cart_item_id, Courses.id_C, Courses.title, CourseCategories.category_name, Courses.price, Courses.image FROM CartItems JOIN Courses ON CartItems.course_id = Courses.id_C JOIN CourseCategories ON Courses.category_id = CourseCategories.category_id JOIN Cart ON CartItems.cart_id = Cart.cart_id WHERE Cart.user_id = ?";
-    $stmt = $db->prepare($cart_items_query);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-}
-    ?>
-
+    $cartItems = $cart->getCartItems($userId);
+    $totalPrice = $cart->getTotalPrice($userId);
+?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -93,7 +72,7 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </nav><br><br><br><br>
-<h1>Your Cart</h1>
+<p><h1>Your Cart</h1></p>
 <table class="table">
             <tr>
                 <th>ID</th>
@@ -103,7 +82,7 @@ if (isset($_SESSION['user_id'])) {
                 <th>Price</th>
                 <th>Action</th>
             </tr>
-            <?php while ($row = $result->fetch_assoc()): ?>
+            <?php while ($row = $cartItems->fetch_assoc()): ?>
                 <tr>
                     <td><?php echo $row['id_C']; ?></td>
                     <td><img src="<?php echo $row['image']; ?>"style="width:100px; height:auto;"></td>

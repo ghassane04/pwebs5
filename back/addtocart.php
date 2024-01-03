@@ -13,13 +13,14 @@ if (isset($_POST['course_id']) && isset($_SESSION['user_id'])) {
     $courseId = $_POST['course_id'];
     $userId = $_SESSION['user_id'];
 
-    if ($cart->addItem($userId, $courseId)) {
-        // Item added successfully
-        header('Location: ../lessons.php');
+    if ($cart->addItem($userId, $courseId) === false) {
+        // Inform the user that the item is already in the cart
+        header('Location: ../lessons.php?status=already_in_cart');
     } else {
-        // Item already in cart
-        header('Location: ../lessons.php?error=already_in_cart');
+        // Item was successfully added
+        header('Location: ../lessons.php?status=added');
     }
+    
     exit();
 }
 
