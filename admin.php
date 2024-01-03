@@ -61,7 +61,7 @@
            <td>$row[username]</td>
            <td>$row[email]</td>
            <td>$row[reg_date]</td>
-           <td>Cart<h1><i class='bx bx-shopping-bag'></i></h1></td>
+           <td><h1><i class='bx bx-shopping-bag'></i></h1></td>
            <td><a href='back/delete.php?id=$row[id];'>Delete</a></td>
        </tr>";
        }

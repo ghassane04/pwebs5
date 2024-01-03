@@ -1,5 +1,8 @@
-<?php
+
+<?php 
 session_start();
+if(isset($_SESSION["email"])){
+?><?php
 $emailValue = $_SESSION['email'] ?? ''; // Use null coalescing operator to handle unset session variable
 $usernameValue = $_SESSION['username'] ?? '';
 $errorMesage = "";
@@ -175,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </li>                       
                 </ul>
                 <div class="d-none d-lg-block">
-                    <a href="logout.php"data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
+                    <a href="back/logout.php"data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
                         <i class="btn-icon"></i>
                         <span>Log out</span>
                     </a>
@@ -314,3 +317,8 @@ echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
     </script>
 </body>
 </html>
+<?php
+} else {
+    echo "Session expired. Please <a href='login.php'>login</a> again.";
+}
+?>

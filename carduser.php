@@ -1,3 +1,7 @@
+<?php
+session_start();
+if(isset($_SESSION["email"])){
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -352,7 +356,7 @@ input:focus {
                             </li>
                         </ul>
                         <div class="d-none d-lg-block">
-                            <a href="logout.php" data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
+                            <a href="back/logout.php" data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
                                 <i class="btn-icon"></i>
                                 <span>Log Out</span>
                             </a>
@@ -537,5 +541,9 @@ cvvInput.addEventListener('blur', () => card.classList.remove('flipped'))
 
     </script>
 </body>
-
 </html>
+<?php
+} else {
+    echo "Session expired. Please <a href='login.php'>login</a> again.";
+}
+?>

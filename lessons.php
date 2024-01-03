@@ -1,5 +1,6 @@
-<?php
+<?php 
 session_start();
+if(isset($_SESSION["email"])){
 require_once 'back/connection.php';
 require_once 'back/cours.php';
 require_once 'back/cart.php';
@@ -55,7 +56,7 @@ $result = $db->query($query);
                             </li>                         
                         </ul>
                         <div class="d-none d-lg-block">
-                            <a href="logout.php" data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
+                            <a href="back/logout.php" data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
                                 <i class="btn-icon"></i>
                                 <span>Log Out</span>
                             </a>
@@ -140,3 +141,8 @@ $result = $db->query($query);
         <script src="js/jquery.sticky.js"></script>
     </body>
 </html>
+<?php
+} else {
+    echo "Session expired. Please <a href='login.php'>login</a> again.";
+}
+?>

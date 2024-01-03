@@ -13,7 +13,6 @@ $successMesage = "";
 if(isset($_POST["submit"])) {
     $emailValue = $_POST["email"];
     $passwordValue = $_POST["password"];
-
     if(empty($emailValue) || empty($passwordValue)) {
         $errorMesage = "all fileds must be filed out!";
     } else {
