@@ -10,7 +10,7 @@ require_once 'back/cours.php';
 $connection = new Connection();
 $db = $connection->conn;
 $connection->selectDatabase('Projet');
-
+//testing git
 if (isset($_GET['delete'])) {
     Cart::deleteCartItem($_GET['delete'], $db);
     header('Location: cartdisplay.php');
