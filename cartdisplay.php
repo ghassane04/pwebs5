@@ -1,11 +1,9 @@
 <?php
 session_start();
-if(isset($_SESSION["email"])){
-
     require_once 'back/connection.php';
     require_once 'back/cart.php';
     require_once 'back/cours.php';
-    
+if(isset($_SESSION["email"])){
     $connection = new Connection();
     $db = $connection->conn;
     $connection->selectDatabase('Projet');

@@ -33,6 +33,8 @@ self::$successMsg= "New record created successfully";
 } else {
     self::$errorMsg ="Error: " . $sql . "<br>" . mysqli_error($conn);
 }
+$lastInsertedId = $conn->insert_id;
+return $lastInsertedId;
 }
 
 public static function  selectAllClients($tableName,$conn){
@@ -65,15 +67,6 @@ static function selectClientById($tableName, $conn, $id) {
     return $row;
 }
 
-static function updateClientid($client,$tableName,$conn,$id){
-    //and send the user to read.php
-    $sql = "UPDATE $tableName SET username='$client->username',email='$client->email' WHERE id='$id'";
-        if (mysqli_query($conn, $sql)) {
-        self::$successMsg= "New record updated successfully";
-        } else {
-            self::$errorMsg= "Error updating record: " . mysqli_error($conn);
-        }
-}
 
 static function deleteClient($tableName,$conn,$id){
     //delet a client by his id, and send the user to read.php

@@ -1,10 +1,13 @@
 <?php
 //include connection file
 include('back/connection.php');
+include('back/cart.php');
 //create in instance of class Connection
 $connection = new Connection();
 //call the selectDatabase method
 $connection->selectDatabase('Projet');
+$db = $connection->conn;
+$cart = new Cart($db);
 $emailValue = "";
 $usernameValue = "";
 $passwordValue = "";
@@ -15,32 +18,35 @@ if(isset($_POST["submit"])){
     $emailValue = $_POST["email"];
     $usernameValue = $_POST["username"];
     $passwordValue = $_POST["password"];
+    $passwordConfirmValue = $_POST["confirm-password"];
    
-    if(empty($emailValue) || empty($usernameValue) || empty($passwordValue)){
+    if(empty($emailValue) || empty($usernameValue) || empty($passwordValue) || empty($passwordConfirmValue)){
 
             $errorMesage = "all fileds must be filed out!";
 
     }else if(strlen($passwordValue) < 8 ){
         $errorMesage = "password must contains at least 8 char";
     }else if(preg_match("/[A-Z]+/", $passwordValue)==0){
-        $errorMesage = "password must contains  at least one capital letter!";
+        $errorMesage = "The password must contains  at least one capital letter!";
+    }else if($passwordValue !== $passwordConfirmValue) {
+      $errorMesage = "The passwords doesn't match !";
     }else{
 
     //include the client file
     include('back/user.php');
-
+    
     //create new instance of client class with the values of the inputs
     $client = new user($usernameValue,$emailValue,$passwordValue);
-//call the insertClient method
-$client->insertClient('Users',$connection->conn);
-//give the $successMesage the value of the static $successMsg of the class
+    
+$userId = $client->insertClient('Users',$connection->conn);;
+if (!$cart->isCartExistForUser($userId)) {
+    $cart->createCartForUser($userId);
+}
 $successMesage = user::$successMsg;
-//give the $errorMesage the value of the static $errorMsg of the class
 $errorMesage = user::$errorMsg;
+
 $emailValue = "";
 $usernameValue = "";
-   
-     
     }
 }
 ?><!doctype html>

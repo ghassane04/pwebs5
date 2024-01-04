@@ -6,7 +6,21 @@ class Cart {
     public function __construct($db) {
         $this->db = $db;
     }
+    public function createCartForUser($userId) {
+        $query = "INSERT INTO Cart (user_id) VALUES (?)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+    }
 
+    public function isCartExistForUser($userId) {
+        $query = "SELECT cart_id FROM Cart WHERE user_id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
+    }
     public function addItem($userId, $courseId) {
         // Check if item is already in the cart
         if ($this->isItemInCart($userId, $courseId)) {

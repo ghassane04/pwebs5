@@ -10,25 +10,38 @@ $emailValue = "";
 $passwordValue = "";
 $errorMesage = "";
 $successMesage = "";
+
 if(isset($_POST["submit"])) {
     $emailValue = $_POST["email"];
     $passwordValue = $_POST["password"];
+
     if(empty($emailValue) || empty($passwordValue)) {
-        $errorMesage = "all fileds must be filed out!";
+        $errorMesage = "All fields must be filled out!";
     } else {
+        // Check if the user is an admin
+        if ($emailValue === 'admin01@gmail.com' && $passwordValue === 'Admin123') {
+            // Set session variables for the admin
+            $_SESSION['admin'] = true;
+            header("Location: admin.php");
+            exit(); // Make sure to exit after redirect
+        }
+
+        // Check if the user is a regular user
         $query = "SELECT * FROM Users WHERE email = '$emailValue'";
         $result = mysqli_query($connection->conn, $query);
+
         if($row = mysqli_fetch_assoc($result)) {
             if(password_verify($passwordValue, $row['password'])) {      
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['email'] = $emailValue;
                 $_SESSION['username'] = $row['username'];
-                header("Location: lessons.php");             
+                header("Location: lessons.php");
+                exit(); // Make sure to exit after redirect
             } else {
-              $errorMesage = "Wrong password!";
+                $errorMesage = "Wrong password!";
             }
         } else {
-          $errorMesage = "User not found!";
+            $errorMesage = "User not found!";
         }
     } 
 }
