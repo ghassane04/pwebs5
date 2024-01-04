@@ -8,7 +8,7 @@ class Card {
     public function addCard($userId, $cardNumber, $cardHolder, $expirationDate, $cvv) {
         $insertQuery = "INSERT INTO Cards (user_id, card_number,card_holder,expiration_date, cvv) VALUES (?, ?, ?, ?, ?)";
         $insertStmt = $this->db->prepare($insertQuery);
-        $insertStmt->bind_param("isss", $userId, $cardNumber,$cardHolder, $expirationDate, $cvv);
+        $insertStmt->bind_param("issss", $userId, $cardNumber,$cardHolder, $expirationDate, $cvv);
         return $insertStmt->execute();
     }
     public function getCardDetails($userId) {

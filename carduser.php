@@ -29,7 +29,7 @@ if (isset($_POST['submit'])) {
             $errorMsg = 'You already have a registered card.';
         }
         else {
-            if ($card->addCard($userId, $cardNumber, $expirationDate, $cvv)) {
+            if ($card->addCard($userId, $cardNumber,$cardHolder, $expirationDate, $cvv)) {
                 $successMsg = 'Card details saved successfully.';
             } else {
                 $errorMsg = 'Error saving card details. Please check your information.';
