@@ -1,10 +1,13 @@
-<!DOCTYPE html>
+<?php
+session_start();
+if(isset($_SESSION["email"])){
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMIN</title>
-        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/courses.css">
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -42,7 +45,6 @@
             <th>Email</th>
             <th>Date</th>
             <th>Shopping Cart</th>
-            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -61,17 +63,19 @@
            <td>$row[username]</td>
            <td>$row[email]</td>
            <td>$row[reg_date]</td>
-           <td><h1><i class='bx bx-shopping-bag'></i></h1></td>
-           <td><a href='back/delete.php?id=$row[id];'>Delete</a></td>
+           <td><a href='admincart.php?id=$row[id];'><h1><i class='bx bx-shopping-bag'></i></h1></a></td>
        </tr>";
        }
-       
        ?>
        </tbody>
-  
    </table>
    </div>
    <script src="js/jquery.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
 </body>
 </html>
+<?php
+} else {
+    header("Location: 404.php");
+}
+?>

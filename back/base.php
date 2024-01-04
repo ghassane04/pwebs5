@@ -48,7 +48,6 @@ CREATE TABLE CartItems (
     cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
     cart_id INT,
     course_id INT,
-    quantity INT,
     price DECIMAL(10, 2),
     FOREIGN KEY (cart_id) REFERENCES Cart(cart_id),
     FOREIGN KEY (course_id) REFERENCES Courses(id_C)
@@ -60,10 +59,12 @@ CREATE TABLE Cards (
     card_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED,
     card_number VARCHAR(16),
-    expiration_date DATE,
+    card_holder VARCHAR(16),
+    expiration_date VARCHAR(7),
     cvv INT,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 )";
+
 
 $connection->selectDatabase('Projet');
 

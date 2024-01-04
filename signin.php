@@ -1,10 +1,7 @@
 <?php
-//include connection file
 include('back/connection.php');
 include('back/cart.php');
-//create in instance of class Connection
 $connection = new Connection();
-//call the selectDatabase method
 $connection->selectDatabase('Projet');
 $db = $connection->conn;
 $cart = new Cart($db);
@@ -19,11 +16,8 @@ if(isset($_POST["submit"])){
     $usernameValue = $_POST["username"];
     $passwordValue = $_POST["password"];
     $passwordConfirmValue = $_POST["confirm-password"];
-   
     if(empty($emailValue) || empty($usernameValue) || empty($passwordValue) || empty($passwordConfirmValue)){
-
             $errorMesage = "all fileds must be filed out!";
-
     }else if(strlen($passwordValue) < 8 ){
         $errorMesage = "password must contains at least 8 char";
     }else if(preg_match("/[A-Z]+/", $passwordValue)==0){
@@ -31,17 +25,12 @@ if(isset($_POST["submit"])){
     }else if($passwordValue !== $passwordConfirmValue) {
       $errorMesage = "The passwords doesn't match !";
     }else{
-
-    //include the client file
     include('back/user.php');
-    
-    //create new instance of client class with the values of the inputs
     $client = new user($usernameValue,$emailValue,$passwordValue);
-    
-$userId = $client->insertClient('Users',$connection->conn);;
-if (!$cart->isCartExistForUser($userId)) {
-    $cart->createCartForUser($userId);
-}
+    $userId = $client->insertClient('Users',$connection->conn);;
+    if (!$cart->isCartExistForUser($userId)) {
+        $cart->createCartForUser($userId);
+    }
 $successMesage = user::$successMsg;
 $errorMesage = user::$errorMsg;
 
@@ -56,116 +45,14 @@ $usernameValue = "";
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-        <title>Welcome to our website</title>
+        <title>Sign in</title>
         <!-- CSS FILES -->        
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;700&display=swap" rel="stylesheet">
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-icons.css" rel="stylesheet">
+        <link href="css/signin.css" rel="stylesheet">
         <link href="css/templatemo-ebook-landing.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <style>
-        .form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: #ffffff;
-  padding: 30px;
-  width: 450px;
-  border-radius: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-::placeholder {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-.form button {
-  align-self: flex-end;
-}
-.flex-column > label {
-  color: #151717;
-  font-weight: 600;
-}
-.inputForm {
-  border: 1.5px solid #ecedec;
-  border-radius: 10px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  transition: 0.2s ease-in-out;
-}
-.input {
-  margin-left: 10px;
-  border-radius: 10px;
-  border: none;
-  width: 85%;
-  height: 100%;
-}
-.input:focus {
-  outline: none;
-}
-.inputForm:focus-within {
-  border: 1.5px solid #2d79f3;
-}
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-}
-.flex-row > div > label {
-  font-size: 14px;
-  color: black;
-  font-weight: 400;
-}
-.span {
-  font-size: 14px;
-  margin-left: 5px;
-  color: #2d79f3;
-  font-weight: 500;
-  cursor: pointer;
-}
-.button-submit {
-  margin: 20px 0 10px 0;
-  background-color: #151717;
-  border: none;
-  color: white;
-  font-size: 15px;
-  font-weight: 500;
-  border-radius: 10px;
-  height: 50px;
-  width: 100%;
-  cursor: pointer;
-}
-.button-submit:hover {
-  background-color: #252727;
-}
-.p {
-  text-align: center;
-  color: black;
-  font-size: 14px;
-  margin: 5px 0;
-}
-.btn {
-  margin-top: 10px;
-  width: 100%;
-  height: 50px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-  gap: 10px;
-  border: 1px solid #ededef;
-  background-color: white;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-}
-.btn:hover {
-  border: 1px solid #2d79f3;
-  ;
-}
-    </style>
     </head>
     <body>
         <main>
@@ -184,7 +71,7 @@ $usernameValue = "";
                                 <a class="nav-link click-scroll" href="index.php">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_5"><i class='bx bxs-contact'></i>Contact</a>
+                                <a class="nav-link click-scroll" href="#section_5">Contact</a>
                             </li>
                         </ul>
                     </div>
@@ -194,7 +81,6 @@ $usernameValue = "";
             <center><form class="form" method="post">
                 <h3>Sign Up</h3>
                 <?php
-
     if(!empty($errorMesage)){
   echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
   <strong>$errorMesage</strong>
@@ -277,6 +163,6 @@ echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
         <!-- JAVASCRIPT FILES -->
         <script src="js/scripthome.js"></script>
         <script src="js/jquery.min.js"></script>
-        <script src="jquery.sticky.js"></script>
+        <script src="js/jquery.sticky.js"></script>
     </body>
 </html>

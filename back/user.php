@@ -52,22 +52,6 @@ $sql = "SELECT id,username, email ,reg_date FROM $tableName ";
         return $data;
     }
 }
-
-static function selectClientById($tableName, $conn, $id) {
-    // Initialize $row to null
-    $row = null;
-
-    // select a client by id, and return the row result
-    $sql = "SELECT id, username, email, reg_date FROM $tableName WHERE id='$id'";
-    $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result) > 0) {
-        // output data of each row
-        $row = mysqli_fetch_assoc($result);
-    }
-    return $row;
-}
-
-
 static function deleteClient($tableName,$conn,$id){
     //delet a client by his id, and send the user to read.php
     $sql = "DELETE FROM $tableName WHERE id='$id'";

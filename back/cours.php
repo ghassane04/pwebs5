@@ -31,13 +31,6 @@ class Course {
         echo "</div>";
     }
 
-    public static function displayCoursesByCategory($courses, $category) {
-        foreach ($courses as $course) {
-            if ($course->category === $category) {
-                $course->displayCourse();
-            }
-        }
-    }
     public static function  selectAllCourses($tableName,$conn){
         $sql = "SELECT * FROM $tableName ";
                 $result = mysqli_query($conn, $sql);
@@ -61,22 +54,4 @@ function getCourseById($id, $courses) {
     }
     return null;
 }
-
-
-// Example usage
-/*
-$courses = [
-    new Course(1, 'image1.jpg', 'Course 1', 'JS', 100),
-    new Course(2, 'image2.jpg', 'Course 2', 'PHP', 150),
-    // ... more courses ...
-];
-
-// Display each course
-foreach ($courses as $course) {
-    $course->displayCourse();
-}
-
-// Display all courses in the 'JS' category
-Course::displayCoursesByCategory($courses, 'JS');
-*/
 ?>

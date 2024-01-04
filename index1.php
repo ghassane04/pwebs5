@@ -236,6 +236,7 @@ if(isset($_SESSION["email"])){
 </html>
 <?php
 } else {
-    echo "Session expired. Please <a href='login.php'>login</a> again.";
+    header("Location: 404.php");
+
 }
 ?>

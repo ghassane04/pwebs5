@@ -1,6 +1,43 @@
 <?php
 session_start();
 if(isset($_SESSION["email"])){
+?><?php
+require_once 'back/card.php'; 
+require_once 'back/connection.php';
+$errorMsg = '';
+$successMsg = '';
+$connection = new Connection();
+$db = $connection->conn;
+$connection->selectDatabase('Projet');
+
+if (isset($_POST['submit'])) {
+    $cardNumber = $_POST['card_number'];
+    $expirationDate = $_POST['expiration_date'];
+    $cvv = $_POST['cvv'];
+    $cardHolder = $_POST['card_holder'];
+    $userId = $_SESSION['user_id'];
+
+    if (empty($cardNumber) || empty($expirationDate) || empty($cvv) || empty($cardHolder)) {
+        $errorMsg = 'Please fill in all the fields.';
+    }
+    elseif (!preg_match('/^(0[1-9]|1[0-2])-(\d{2})$/', $expirationDate)) {
+        $errorMsg = 'Invalid expiration date format. Use MM-YY.';
+    } 
+    else {
+        $card = new Card($db);
+        if ($card->checkExistingCard($userId)) {
+            $errorMsg = 'You already have a registered card.';
+        }
+        else {
+            if ($card->addCard($userId, $cardNumber, $expirationDate, $cvv)) {
+                $successMsg = 'Card details saved successfully.';
+            } else {
+                $errorMsg = 'Error saving card details. Please check your information.';
+            }
+        }
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,326 +49,7 @@ if(isset($_SESSION["email"])){
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/templatemo-ebook-landing.css" rel="stylesheet">
-    <style>
-
-#main-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    min-width: 400px;
-}
-
-.content-box {
-    display: flex;
-    width: 400px;
-    height: 500px;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #1e1e1e;
-    padding: 20px;
-    position: relative;
-    color: #ffffff;
-    background: linear-gradient(45deg, #000000, #0a121f);
-    border-radius: 10px;
-}
-
-.preview {
-    width: 80%;
-    height: 35%;
-    position: absolute;
-    top: 0%;
-    transform: translateY(-50%);
-    perspective: 1000px;
-}
-
-.card {
-    width: 100%;
-    height: 100%;
-    transition: 1s;
-    transform-style: preserve-3d;
-    perspective: 1000px;
-    border-radius: 8px;
-}
-
-.flipped,
-.preview:hover .card {
-    transform: rotateY(-180deg);
-}
-
-.front,
-.back {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background: #2c2c2c;
-    backface-visibility: hidden;
-    border-radius: 8px;
-    overflow: hidden;
-    color: white;
-}
-
-.back {
-    transform: rotateY(-180deg);
-}
-
-.front::after,
-.back::after,
-.front::before,
-.back::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-}
-
-.front::after {
-    background: #1a1a1a;
-    border-radius: 0% 0% 0 160px;
-    transform: translate(50%, -30%);
-    top: 0;
-}
-
-.front::before {
-    background: #3d3d3d;
-    border-radius: 0 160px 0 0;
-    transform: translate(-50%, 50%);
-}
-
-.title {
-    position: absolute;
-    right: 0;
-    z-index: 1;
-    letter-spacing: 1.5px;
-    padding: 1rem;
-}
-
-#chip {
-    top: 10%;
-    position: absolute;
-    background: #e0ab89;
-    width: 15%;
-    height: 18%;
-    border-radius: 5px;
-    margin-left: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#chip span {
-    position: absolute;
-    background: #e0ab89;
-    border: 1px solid black;
-}
-
-#chip span:nth-child(1) {
-    height: 100%;
-    width: 40%;
-    border-top: none;
-    border-bottom: none;
-}
-
-#chip span:nth-child(2) {
-    height: 60%;
-    width: 40%;
-    left: 0;
-    border-left: none;
-    border-radius: 0 5px 5px 0;
-}
-
-#chip span:nth-child(3) {
-    height: 60%;
-    width: 40%;
-    border-right: none;
-    border-radius: 5px 0 0 5px;
-    right: 0;
-}
-
-#chip span:nth-child(4) {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid black;
-}
-
-#chip span:nth-child(5) {
-    aspect-ratio: 1/1;
-    width: 25%;
-    border-radius: 2px;
-}
-
-.card-number,
-.card-name,
-.validity-box {
-    position: absolute;
-    margin-left: 15px;
-}
-
-.card-number {
-    top: 42%;
-    letter-spacing: 2px;
-    font-size: 18px;
-    z-index: 1;
-}
-
-.card-name {
-    bottom: 8%;
-    font-size: 14px;
-    letter-spacing: 2px;
-}
-
-.validity-box {
-    left: 40%;
-    bottom: 25%;
-    width: max-content;
-    display: flex;
-    font-size: 16px;
-    align-items: center;
-    z-index: 1;
-    letter-spacing: 2px;
-}
-
-.validity-box span:first-child {
-    font-size: 6px;
-    color: #ffffffba;
-    margin-right: 0px;
-    letter-spacing: 2px;
-}
-
-.validity-box span:nth-child(2) {
-    font-size: 8px;
-    margin: 0 1px;
-    color: #ffffff69;
-}
-
-.logo {
-    position: absolute;
-    font-size: 8px;
-    width: 20%;
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    letter-spacing: 1px;
-    bottom: 4%;
-    right: 0%;
-}
-
-.logo::before,
-.logo::after {
-    content: '';
-    position: absolute;
-    width: 50%;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-}
-
-.logo::before {
-    background: rgba(255, 0, 0, 0.525);
-    left: 10%
-}
-
-.logo::after {
-    background: rgba(255, 213, 0, 0.584);
-    right: 10%;
-}
-
-.top-text {
-    font-size: 5px;
-    padding: 5px 0 1px 5px;
-    color: #ffffff99;
-}
-
-.strip {
-    width: 100%;
-    height: 20%;
-    background: black;
-    position: relative;
-    z-index: 1;
-}
-
-.box {
-    width: 90%;
-    height: 20%;
-    position: relative;
-    background: white;
-    display: flex;
-    align-items: center;
-    margin: 10px auto;
-    border-radius: 2px;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.signature {
-    width: 85%;
-    height: 100%;
-    background: repeating-linear-gradient(300deg, #e7e7e7 -2px, #e7e7e7 3px, #cccccc 0px, #cccccc 8px);
-}
-
-.card-cvv {
-    width: 15%;
-    color: black;
-    letter-spacing: 2px;
-    text-align: center;
-}
-
-.text {
-    font-size: 6px;
-    z-index: 1;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    grid-gap: 10px;
-    color: #ffffff99;
-    padding: 10px;
-}
-
-form {
-    display: grid;
-    grid-template-columns: auto auto;
-    width: 100%;
-    grid-gap: 30px;
-}
-
-.field {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    font-size: 12px;
-}
-
-.field:nth-child(1) {
-    grid-row: 1;
-    grid-column: 1/3;
-}
-
-.field:nth-child(2) {
-    grid-row: 2;
-    grid-column: 1/3;
-}
-
-.field:nth-child(3) {
-    grid-row: 3;
-    grid-column: 1;
-}
-
-input {
-    font-size: 16px;
-    border: none;
-    border-bottom: 1px solid #ffffff42;
-    padding: 10px 0 4px;
-    background: transparent;
-    color: #ffffffb8;
-    caret-color: white;
-}
-
-input:focus {
-    outline: none;
-}
-</style>
+    <link href="css/card.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg"style="background-color:black">
@@ -364,12 +82,30 @@ input:focus {
                     </div>
                 </div>
             </nav><br><br>
+            <?php
+if(!empty($errorMsg)){
+echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+<strong>$errorMsg</strong>
+<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+</button>
+</div>";
+}
+   ?>
+   <?php
+            if(!empty($successMsg)){
+echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+<strong>$successMsg</strong>
+<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+</button>
+</div>";
+            }
+  ?>
     <div id="main-container" style="font-family: serif;">
         <div class="content-box">
             <div class="preview">
                 <div class="card">
                     <div class="front">
-                        <div class="title">CREDIT CARD</div>
+                        <div class="title">CIH Bank</div>
                         <div id="chip">
                             <span></span><span></span><span></span><span></span><span></span>
                         </div>
@@ -384,7 +120,6 @@ input:focus {
                         </div>
                         <div class="logo">MasterCard</div>
                     </div>
-
                     <div class="back">
                         <div class="top-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
                         <div class="strip"></div>
@@ -398,27 +133,23 @@ input:focus {
                     </div>
                 </div>
             </div>
-            <form>
+            <form action="carduser.php" method="post">
                 <div class="field">
-                    <label for="number">Card Number</label>
-                    <input type="text" id="number" oninput="UpdateAccountNumber(this);" maxlength="19">
+                    <input type="text" id="number" oninput="UpdateAccountNumber(this);"name="card_number" placeholder="Enter your Card Number" required maxlength="19">
                 </div>
-
                 <div class="field">
                     <label for="name">Card Holder</label>
-                    <input type="text" id="name" oninput="updateCardHolder(this);" maxlength="25">
+                    <input type="text" id="name" oninput="updateCardHolder(this);"name="card_holder" placeholder="Enter your name" required maxlength="25">
                 </div>
-
                 <div class="field">
-                    <label for="validity">Valid upto (MM/YY)</label>
-                    <input type="text" id="validity" oninput="updateValidity(this)" maxlength="5">
+                    <label for="validity">Valid upto (MM-YY)</label>
+                    <input type="text" id="validity" oninput="updateValidity(this)"name="expiration_date" placeholder="Expiration Date (MM-YY)" required maxlength="5">
                 </div>
-
                 <div class="field">
                     <label for="cvv">CVV</label>
-                    <input type="text" id="cvv" oninput="updateCardCvv(this)" maxlength="3">
+                    <input type="text" id="cvv" oninput="updateCardCvv(this)"name="cvv" placeholder="CVV" required maxlength="3">
                 </div>
-
+                <input type="submit" name="submit" value="Save Card">
             </form>
         </div>
     </div>
@@ -475,7 +206,7 @@ const cvvInput = document.querySelector('#cvv');
 const dummy = {
     number: '0000 0000 0000 0000',
     name: 'Name Surname',
-    validity: '00/00',
+    validity: '00-00',
     cvv: '000'
 }
 
@@ -522,7 +253,7 @@ function updateValidity(input) {
         }
 
         else if (i === 2) {
-            formattedValue += '/';
+            formattedValue += '-';
         }
         formattedValue += digit;
     }
@@ -544,6 +275,6 @@ cvvInput.addEventListener('blur', () => card.classList.remove('flipped'))
 </html>
 <?php
 } else {
-    echo "Session expired. Please <a href='login.php'>login</a> again.";
+    header("Location: 404.php");
 }
 ?>

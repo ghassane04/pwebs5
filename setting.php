@@ -1,33 +1,27 @@
-
 <?php 
 session_start();
 if(isset($_SESSION["email"])){
 ?><?php
-$emailValue = $_SESSION['email'] ?? ''; // Use null coalescing operator to handle unset session variable
-$usernameValue = $_SESSION['username'] ?? '';
+$emailValue = $_SESSION['email'];
+$usernameValue = $_SESSION['username'];
 $errorMesage = "";
 $successMesage = "";
-
 include('back/connection.php');
-   
-// Create an instance of class Connection
 $connection = new Connection();
-
-// Call the selectDatabase method
 $connection->selectDatabase('Projet');
-
-// Include the user file
 include('back/user.php');
+include('back/card.php');
+$db = $connection->conn;
+$user_id= $_SESSION['user_id'];
+$card = new Card($db);
+$cardDetails = $card->getCardDetails($user_id);
 
-// Check for form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $client = new stdClass();
     $client->email = $emailValue;
     $client->username = $_POST['username'];
-    $user_id= $_SESSION['user_id'];
-
-    // Call updateClientInfo function with correct arguments
-    $mysqli = $connection->conn; // Replace 'conn' with the actual property name
+    
+    $mysqli = $connection->conn;
     user::updateClientInfo($client, "Users", $mysqli,$user_id);
     
     if (isset(user::$successMsg)) {
@@ -42,124 +36,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Setting</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/templatemo-ebook-landing.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet"/>
-    <style>
-        .a{
-            display:none;  
-            margin-left:20%;
-        } 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: #ffffff;
-  padding: 30px;
-  width: 450px;
-  border-radius: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-::placeholder {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-.form button {
-  align-self: flex-end;
-}
-.flex-column > label {
-  color: #151717;
-  font-weight: 600;
-}
-.inputForm {
-  border: 1.5px solid #ecedec;
-  border-radius: 10px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  transition: 0.2s ease-in-out;
-}
-.input {
-  margin-left: 10px;
-  border-radius: 10px;
-  border: none;
-  width: 85%;
-  height: 100%;
-}
-.input:focus {
-  outline: none;
-}
-.inputForm:focus-within {
-  border: 1.5px solid #2d79f3;
-}
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-}
-.flex-row > div > label {
-  font-size: 14px;
-  color: black;
-  font-weight: 400;
-}
-.span {
-  font-size: 14px;
-  margin-left: 5px;
-  color: #2d79f3;
-  font-weight: 500;
-  cursor: pointer;
-}
-.button-submit {
-  margin: 20px 0 10px 0;
-  background-color: #151717;
-  border: none;
-  color: white;
-  font-size: 15px;
-  font-weight: 500;
-  border-radius: 10px;
-  height: 50px;
-  width: 100%;
-  cursor: pointer;
-}
-.button-submit:hover {
-  background-color: #252727;
-}
-.p {
-  text-align: center;
-  color: black;
-  font-size: 14px;
-  margin: 5px 0;
-}
-.btn {
-  margin-top: 10px;
-  width: 100%;
-  height: 50px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-  gap: 10px;
-  border: 1px solid #ededef;
-  background-color: white;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-}
-.btn:hover {
-  border: 1px solid #2d79f3;
-  ;
-}
-    </style>
-   
+    <link rel="stylesheet" href="css/setting.css">
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet"/>   
 </head>
 <body>
     <nav class="navbar navbar-expand-lg"style="background-color:black">
@@ -173,6 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-lg-auto me-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="index1.php"><i class='bx bx-home'></i>Home</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link click-scroll" href="lessons.php"><i class='bx bx-book-open'></i>Courses</a>
                     </li>                       
@@ -203,8 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </li>
         <li style="margin-top:110%;">
           <a href="back/logout.php">
-          <i class='bx bx-credit-card'></i>
-            <span class="links_name">DECONEXION</span>
+          <i class='bx bx-exit'></i>
+            <span class="links_name">LOG OUT</span>
           </a>
         </li>
       </ul>
@@ -269,15 +158,19 @@ echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
                         <span></span>
                         <span></span>
                     </div>
-                    <div class="title-text">Bank Name</div>
+                    <div class="title-text">CIH Bank</div>
                     <div class="details">
-                        <div class="name">Person Name</div>
-                        <p id="hidden-number">1111 1223 1223 1452</p>
-                        <span id="cvv">CVV: 304</span>
-                        <span id="valid-date"> Expiry: 02/30</span>
-                    </div>
-                    <button id="hide-btn">Hide Card Details</button>
-                    <div class="logo">MasterCard</div>
+    <?php if ($cardDetails): ?>
+        <div class="name"><?php echo htmlspecialchars($cardDetails['card_holder']); ?></div>
+        <p id="hidden-number"><?php echo htmlspecialchars($cardDetails['card_number']); ?></p>
+        <span id="cvv">CVV: <?php echo htmlspecialchars($cardDetails['cvv']); ?></span>
+        <span id="valid-date">Expiry: <?php echo htmlspecialchars($cardDetails['expiration_date']); ?></span>
+    <?php else: ?>
+        <p>No card details available.</p>
+    <?php endif; ?>
+</div>
+<button id="hide-btn">Hide Card Details</button>
+<div class="logo">MasterCard</div>
                 </div>
             </div>
         </div>
@@ -288,8 +181,6 @@ echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
         </tr>
         </aside>
     </div>
-    
-    
     <script>
         const b=document.querySelector('#b');
         const a=document.querySelector('#a');
@@ -310,6 +201,6 @@ echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
 </html>
 <?php
 } else {
-    echo "Session expired. Please <a href='login.php'>login</a> again.";
+  header("Location: 404.php");
 }
 ?>

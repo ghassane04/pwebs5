@@ -1,10 +1,7 @@
 <?php
 session_start();
-// Include connection file
 include('back/connection.php');
-// Create an instance of the Connection class
 $connection = new Connection();
-// Select the database
 $connection->selectDatabase('Projet');
 $emailValue = "";
 $passwordValue = "";
@@ -18,25 +15,20 @@ if(isset($_POST["submit"])) {
     if(empty($emailValue) || empty($passwordValue)) {
         $errorMesage = "All fields must be filled out!";
     } else {
-        // Check if the user is an admin
         if ($emailValue === 'admin01@gmail.com' && $passwordValue === 'Admin123') {
-            // Set session variables for the admin
             $_SESSION['admin'] = true;
             header("Location: admin.php");
-            exit(); // Make sure to exit after redirect
+            exit();
         }
-
-        // Check if the user is a regular user
         $query = "SELECT * FROM Users WHERE email = '$emailValue'";
         $result = mysqli_query($connection->conn, $query);
-
         if($row = mysqli_fetch_assoc($result)) {
             if(password_verify($passwordValue, $row['password'])) {      
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['email'] = $emailValue;
                 $_SESSION['username'] = $row['username'];
                 header("Location: lessons.php");
-                exit(); // Make sure to exit after redirect
+                exit();
             } else {
                 $errorMesage = "Wrong password!";
             }
@@ -75,10 +67,10 @@ if(isset($_POST["submit"])) {
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-auto me-lg-4">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="index.php"><i class='bx bx-home'></i>Home</a>
+                                <a class="nav-link click-scroll" href="index.php">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_5"><i class='bx bxs-contact'></i>Contact</a>
+                                <a class="nav-link click-scroll" href="#section_5">Contact</a>
                             </li>
                         </ul>
                     </div>
@@ -188,7 +180,6 @@ echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
         <!-- JAVASCRIPT FILES -->
         <script src="js/scripthome.js"></script>
         <script src="js/jquery.min.js"></script>
-        <script src="
-        jquery.sticky.js"></script>
+        <script src="js/jquery.sticky.js"></script>
     </body>
 </html>

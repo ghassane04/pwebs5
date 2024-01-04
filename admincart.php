@@ -1,21 +1,17 @@
 <?php
 session_start();
-    require_once 'back/connection.php';
-    require_once 'back/cart.php';
-    require_once 'back/cours.php';
 if(isset($_SESSION["email"])){
+require_once 'back/connection.php';
+require_once 'back/cart.php';
+
+if (isset($_GET['id'])) {
+    $userId = $_GET['id'];
+
     $connection = new Connection();
     $db = $connection->conn;
     $connection->selectDatabase('Projet');
-    $userId = $_SESSION['user_id'];
-    // Create an instance of Cart class
+
     $cart = new Cart($db);
-    if (isset($_GET['delete'])) {
-        $cartItemId = $_GET['delete'];
-        $cart->deleteCartItem($cartItemId, $userId);
-        header('Location: cartdisplay.php');
-        exit();
-    }
     $cartItems = $cart->getCartItems($userId);
     $totalPrice = $cart->getTotalPrice($userId);
 ?>
@@ -26,7 +22,7 @@ if(isset($_SESSION["email"])){
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-        <title>My Shopping Cart</title>
+        <title>Admin Cart</title>
         <!-- CSS FILES -->        
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;700&display=swap" rel="stylesheet">
         <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -49,17 +45,8 @@ if(isset($_SESSION["email"])){
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-auto me-lg-4">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="index1.php"><i class='bx bx-home'></i>Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="lessons.php"><i class='bx bx-book-open'></i>Courses</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="cartdisplay.php"><i class='bx bx-shopping-bag'></i>Cart</a>
-                            </li>   
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="setting.php"><i class='bx bx-cog'></i>Settings</a>
-                            </li>                      
+                                <a class="nav-link click-scroll" href="admin.php"><i class='bx bx-home'></i>List of users</a>
+                            </li>                     
                         </ul>
                         <div class="d-none d-lg-block">
                             <a href="back/logout.php" data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
@@ -70,7 +57,6 @@ if(isset($_SESSION["email"])){
                     </div>
                 </div>
             </nav><br><br><br><br>
-<p><h1>Your Cart</h1></p>
 <table class="table">
             <tr>
                 <th>ID</th>
@@ -87,12 +73,10 @@ if(isset($_SESSION["email"])){
                     <td><?php echo $row['title']; ?></td>
                     <td><?php echo $row['category_name']; ?></td>
                     <td><?php echo $row['price']; ?></td>
-                    <td><a href="cartdisplay.php?delete=<?php echo $row['cart_item_id']; ?>">Delete</a></td>
                 </tr>
             <?php endwhile; ?>
         </table>
-        <?php echo "<p style='margin-left:70%;'>Total Price: $" . number_format($totalPrice, 2) . "</p>";
-            echo "<a style='margin-left:70%;'href='carduser.php'>Proceed to Payment</a>";?>
+        <?php echo "<p style='margin-left:70%;'>Total Price: $" . number_format($totalPrice, 2) . "</p>";?>
         <!-- JAVASCRIPT FILES -->
         <script src="js/jquery.min.js"></script>
         <script src="js/jquery.sticky.js"></script>
@@ -100,7 +84,11 @@ if(isset($_SESSION["email"])){
 </html>
 <?php
 } else {
+    echo "User ID not provided.";
+}
+?>
+<?php
+} else {
     header("Location: 404.php");
-
 }
 ?>

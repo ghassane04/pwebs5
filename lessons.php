@@ -4,6 +4,7 @@ if(isset($_SESSION["email"])){
 require_once 'back/connection.php';
 require_once 'back/cours.php';
 require_once 'back/cart.php';
+include 'back/categorie.php';
 
 $connection = new Connection();
 $db = $connection->conn;
@@ -11,6 +12,10 @@ $connection->selectDatabase('Projet');
 
 $query = "SELECT * FROM Courses";
 $result = $db->query($query);
+$categorie = new Categorie($db);
+$selectedCategory = isset($_GET['category']) ? $_GET['category'] : null;
+$categories = $categorie->getCategories();
+
 ?>
 
 <!doctype html>
@@ -64,36 +69,39 @@ $result = $db->query($query);
                     </div>
                 </div>
             </nav><br><br><br><br>
-                <div class="allpage">
-                    <div class="categories"style="margin-left: 2%;">
-                        <h5 style="color:yellow">Categories :</h5>
-                        <div class="p">
-                            <ul>
-                                <li class="li" style="cursor: pointer;"><a onclick=All()>ALL</a></li>
-                                <li class="li"style="cursor: pointer;"><a onclick=Html()>HTML</a></li>
-                                <li class="li"style="cursor: pointer;"><a onclick=Css()>Css</a></li>
-                                <li class="li"style="cursor: pointer;"><a onclick=Js()>JS</a></li>
-                                <li class="li"style="cursor: pointer;"><a onclick=Php()>PHP</a></li>
-                              </ul>
-                        </div>
-                    </div>
-                        <div class="contain">
-                            <div class="list">
-    <?php
-    while ($courseData = $result->fetch_assoc()) {
-        $course = new Course(
-            $courseData['id_C'],
-            $courseData['image'],
-            $courseData['title'],
-            $courseData['category_id'],
-            $courseData['price']
-        );
-        $course->displayCourse();
-    }
-    ?>
-</div>
-                        </div>
-
+            <div class="allpage">
+    <div class="categories" style="margin-left: 2%;">
+        <h5 style="color:yellow">Categories :</h5>
+        <div class="p">
+            <ul>
+                <?php foreach ($categories as $cat): ?>
+                    <li class="li" style="cursor: pointer;"><a style="color:black;" href="lessons.php?category=<?= $cat ?>"> <?= $cat ?> </a></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+    <div class="contain">
+        <div class="list">
+            <?php
+            if ($selectedCategory) {
+                $categorie->displayCoursesByCategory($selectedCategory);
+            } else {
+                $query = "SELECT * FROM Courses";
+                $result = $db->query($query);
+                while ($courseData = $result->fetch_assoc()) {
+                    $course = new Course(
+                        $courseData['id_C'],
+                        $courseData['image'],
+                        $courseData['title'],
+                        $courseData['category_id'],
+                        $courseData['price']
+                    );
+                    $course->displayCourse();
+                }
+            }
+            ?>
+        </div>
+    </div>
 </div><br><br>
     <section class="contact-section section-padding" id="section_5">
         <div class="container">
@@ -143,6 +151,6 @@ $result = $db->query($query);
 </html>
 <?php
 } else {
-    echo "Session expired. Please <a href='login.php'>login</a> again.";
+    header("Location: 404.php");
 }
 ?>
