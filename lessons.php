@@ -17,7 +17,6 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : null;
 $categories = $categorie->getCategories();
 
 ?>
-
 <!doctype html>
 <html lang="en">
     <head>

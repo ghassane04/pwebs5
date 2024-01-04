@@ -22,9 +22,8 @@ class Cart {
         return $result->num_rows > 0;
     }
     public function addItem($userId, $courseId) {
-        // Check if item is already in the cart
         if ($this->isItemInCart($userId, $courseId)) {
-            return false; // Item already in cart
+            return false;
         }
 
         // Get course price
