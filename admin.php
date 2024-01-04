@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_SESSION["email"])){
+if(isset($_SESSION["admin"])){
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,10 +26,16 @@ if(isset($_SESSION["email"])){
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-auto me-lg-4">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="index.php"><i class='bx bx-home'></i>Home</a>
+                                <a class="nav-link click-scroll" href="index2.php"><i class='bx bx-home'></i>Home</a>
                             </li>
                         </ul>
                     </div>
+                    <div class="d-none d-lg-block">
+                    <a href="back/logout.php"data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
+                        <i class="btn-icon"></i>
+                        <span>Log out</span>
+                    </a>
+                </div>
                 </div>
             </nav><br><br><br>
 <div class="container my-5">

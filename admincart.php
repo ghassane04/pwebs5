@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_SESSION["email"])){
+if(isset($_SESSION["admin"])){
 require_once 'back/connection.php';
 require_once 'back/cart.php';
 
@@ -56,7 +56,7 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                 </div>
-            </nav><br><br><br><br>
+            </nav><br><br><br><br><br><br>
 <table class="table">
             <tr>
                 <th>ID</th>
@@ -64,7 +64,6 @@ if (isset($_GET['id'])) {
                 <th>Title</th>
                 <th>Category</th>
                 <th>Price</th>
-                <th>Action</th>
             </tr>
             <?php while ($row = $cartItems->fetch_assoc()): ?>
                 <tr>
@@ -75,7 +74,7 @@ if (isset($_GET['id'])) {
                     <td><?php echo $row['price']; ?></td>
                 </tr>
             <?php endwhile; ?>
-        </table>
+        </table><br><br>
         <?php echo "<p style='margin-left:70%;'>Total Price: $" . number_format($totalPrice, 2) . "</p>";?>
         <!-- JAVASCRIPT FILES -->
         <script src="js/jquery.min.js"></script>
