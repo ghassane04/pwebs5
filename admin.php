@@ -26,16 +26,10 @@ if(isset($_SESSION["admin"])){
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-auto me-lg-4">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="index2.php"><i class='bx bx-home'></i>Home</a>
+                                <a class="nav-link click-scroll" href="index.php"><i class='bx bx-home'></i>Home</a>
                             </li>
                         </ul>
                     </div>
-                    <div class="d-none d-lg-block">
-                    <a href="back/logout.php"data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
-                        <i class="btn-icon"></i>
-                        <span>Log out</span>
-                    </a>
-                </div>
                 </div>
             </nav><br><br><br>
 <div class="container my-5">
@@ -51,6 +45,7 @@ if(isset($_SESSION["admin"])){
             <th>Email</th>
             <th>Date</th>
             <th>Shopping Cart</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -70,10 +65,12 @@ if(isset($_SESSION["admin"])){
            <td>$row[email]</td>
            <td>$row[reg_date]</td>
            <td><a href='admincart.php?id=$row[id];'><h1><i class='bx bx-shopping-bag'></i></h1></a></td>
+           <td><a href='back/delete.php?id=$row[id];'>Delete</a></td>
        </tr>";
        }
        ?>
        </tbody>
+  
    </table>
    </div>
    <script src="js/jquery.min.js"></script>

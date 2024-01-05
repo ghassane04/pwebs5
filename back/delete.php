@@ -5,6 +5,7 @@ include('connection.php');
 $connection = new Connection();
 $connection->selectDatabase('Projet');
 include('user.php');
-User::deleteClient('Users',$connection->conn,$id);
+User::deleteClient($id,$connection->conn);
+header("Location: ../admin.php");
 }
 ?>

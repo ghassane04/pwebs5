@@ -52,19 +52,41 @@ $sql = "SELECT id,username, email ,reg_date FROM $tableName ";
         return $data;
     }
 }
-static function deleteClient($tableName,$conn,$id){
-    //delet a client by his id, and send the user to read.php
-    $sql = "DELETE FROM $tableName WHERE id='$id'";
+public static function deleteClient($userId, $mysqli) {
+    // Start transaction
+    $mysqli->begin_transaction();
 
-if (mysqli_query($conn, $sql)) {
-    self::$successMsg= "Record deleted successfully";
-    header("Location:../admin.php");
-} else {
-    self::$errorMsg= "Error deleting record: " . mysqli_error($conn);
-}  
+    try {
+        // Delete related data from other tables
+        $queries = [
+            "DELETE FROM CartItems WHERE cart_id IN (SELECT cart_id FROM Cart WHERE user_id = ?)",
+            "DELETE FROM Cart WHERE user_id = ?",
+            "DELETE FROM Cards WHERE user_id = ?",
+        ];
+
+        foreach ($queries as $query) {
+            $stmt = $mysqli->prepare($query);
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+        }
+
+        // Finally, delete the user
+        $stmt = $mysqli->prepare("DELETE FROM Users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+
+        // Commit transaction
+        $mysqli->commit();
+    } catch (Exception $e) {
+        // There was an error, roll back transaction
+        $mysqli->rollback();
+
+        // You can log the error message: $e->getMessage();
+        return false;
     }
-    
 
+    return true;
+}
     public static function updateClientInfo($client, $tableName, $mysqli,$id) {
         // Prepare SQL statement to prevent SQL injection
         if (!$mysqli instanceof mysqli) {
