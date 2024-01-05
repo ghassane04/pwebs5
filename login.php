@@ -7,7 +7,7 @@ $emailValue = "";
 $passwordValue = "";
 $errorMesage = "";
 $successMesage = "";
-
+$_SESSION['admin'] = "null";
 if(isset($_POST["submit"])) {
     $emailValue = $_POST["email"];
     $passwordValue = $_POST["password"];

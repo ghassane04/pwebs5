@@ -78,10 +78,7 @@ public static function deleteClient($userId, $mysqli) {
         // Commit transaction
         $mysqli->commit();
     } catch (Exception $e) {
-        // There was an error, roll back transaction
         $mysqli->rollback();
-
-        // You can log the error message: $e->getMessage();
         return false;
     }
 
@@ -93,9 +90,9 @@ public static function deleteClient($userId, $mysqli) {
             self::$errorMsg = "Invalid database connection";
             return;
         }
-        $sql = "UPDATE $tableName SET username='$client->username',email='$client->email' WHERE id='$id'";
+        $sql = "UPDATE $tableName SET username='$client->username' WHERE id='$id'";
         if (mysqli_query($mysqli, $sql)) {
-        self::$successMsg= "New record updated successfully";
+        self::$successMsg= "New record updated successfully.Please re login to update your new username!";
         
         } else {
             self::$errorMsg= "Error updating record: " . mysqli_error($mysqli);

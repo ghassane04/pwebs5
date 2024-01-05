@@ -1,7 +1,7 @@
 <?php
 class Cart {
 
-    private $db; // Database connection
+    private $db;
 
     public function __construct($db) {
         $this->db = $db;

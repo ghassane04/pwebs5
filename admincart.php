@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
     <body class="">
             <nav class="navbar navbar-expand-lg" style="background-color:black;left:0%">
                 <div class="container">
-                    <a class="navbar-brand" href="index1.php">
+                    <a class="navbar-brand" href="index2.php">
                         <i class="navbar-brand-icon bi-book me-2"></i>
                         <span>SaCourses</span>
                     </a>

@@ -16,7 +16,7 @@ if(isset($_SESSION["admin"])){
     <body>
     <nav class="navbar navbar-expand-lg" style="background-color:black">
                 <div class="container">
-                    <a class="navbar-brand" href="index.php">
+                    <a class="navbar-brand" href="index2.php">
                         <i class="navbar-brand-icon bi-book me-2"></i>
                         <span>SaCourses</span>
                     </a>
@@ -26,15 +26,23 @@ if(isset($_SESSION["admin"])){
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-auto me-lg-4">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="index.php"><i class='bx bx-home'></i>Home</a>
+                                <a class="nav-link click-scroll" href="index2.php"><i class='bx bx-home'></i>Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="admin.php">List of Users</a>
                             </li>
                         </ul>
                     </div>
+                    <div class="d-none d-lg-block">
+                            <a href="back/logout.php" data-toggle="modal" data-target="#modal-form"class="btn custom-btn custom-border-btn btn-naira btn-inverted">
+                                <i class="btn-icon"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </div>
                 </div>
             </nav><br><br><br>
 <div class="container my-5">
     <h2>List of users</h2>
-    <a  class="btn btn-primary" href="signin.php" role="button">Signup</a>
     <br>
     <br>
     <table class="table">

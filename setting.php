@@ -18,12 +18,16 @@ $cardDetails = $card->getCardDetails($user_id);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $client = new stdClass();
-    $client->email = $emailValue;
     $client->username = $_POST['username'];
     
     $mysqli = $connection->conn;
-    user::updateClientInfo($client, "Users", $mysqli,$user_id);
-    
+    $updateStatus=user::updateClientInfo($client, "Users", $mysqli,$user_id);
+    if ($updateStatus) {
+      $_SESSION['username'] = $client->username;
+      $usernameValue = $_SESSION['username'];
+      header('Location: setting.php');
+      exit();
+  }
     if (isset(user::$successMsg)) {
         $successMesage = user::$successMsg;
     } elseif (isset(user::$errorMsg)) {
